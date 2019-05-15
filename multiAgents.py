@@ -67,37 +67,47 @@ class ReflexAgent(Agent):
         to create a masterful evaluation function.
         """
         # Useful information you can extract from a GameState (pacman.py)
+
         successorGameState = currentGameState.generatePacmanSuccessor(action)
         newPos = successorGameState.getPacmanPosition()
         newFood = successorGameState.getFood()
         newGhostStates = successorGameState.getGhostStates()
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
-        "*** YOUR CODE HERE ***"
-        
+        print(successorGameState)
         print(newFood)
-        "calculating distance to the farthest food pallet"
-       
-        newFoodList = newFood.asList()
-        min_food_distance = -1
-        for food in newFoodList:
-          distance = util.manhattanDistance(newPos,food)
-          if min_food_distance >= distance or min_food_distance == -1:
-            min_food_distance = distance
-        
-        "Calculating distance from PacMan to the ghost. Also, checking proximity of the ghost"
+        print(action)
+        print(newScaredTimes)
 
+        "calculating distance to the farthest food pallet"
+        pacman = successorGameState.getPacmanPosition()
+
+        min_food_distance2 = 99999999
+        for x in range(newFood.width):
+            for y in range(newFood.height):
+                if newFood[x][y]:
+                # print str(newFood[x][y]) + " comida" + str(x) + " " + str(y)
+                # print "distancia de Manhattan " + str(util.manhattanDistance(pacman, (x, y)))
+                    manhattanDistance = util.manhattanDistance(pacman, (x, y))
+                    if (min_food_distance2 >= manhattanDistance):
+                        min_food_distance2 = manhattanDistance
+
+        "Calculating distance from PacMan to the ghost. Also, checking proximity of the ghost"
         distances_to_ghosts = 1.5
         proximity_to_ghosts = 0
+        nearest_ghost = 0
         for ghost_State in successorGameState.getGhostPositions():
-          distance = util.manhattanDistance(newPos,ghost_State)
-          distances_to_ghosts += distance
-          if distance <= 1:
-            proximity_to_ghosts += 1
+            distance = util.manhattanDistance(newPos, ghost_State)
+            distances_to_ghosts += distance
+            if nearest_ghost > distance:
+                nearest_ghost = distance
+            if distance <= 1:
+                proximity_to_ghosts += 1
 
-        return successorGameState.getScore() + (1 / float(min_food_distance)) - (1 / float(distances_to_ghosts)) - proximity_to_ghosts
 
-        # return successorGameState.getScore() 
+        return successorGameState.getScore() + (1 / float(min_food_distance2)) - (
+                    1 / float(distances_to_ghosts)) - proximity_to_ghosts #- nearest_ghost
+        # return successorGameState.getScore() + (1 / float(min_food_distance)) - proximity_to_ghosts
 
 def scoreEvaluationFunction(currentGameState):
     """
