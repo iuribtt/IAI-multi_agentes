@@ -1,4 +1,13 @@
 
+http://ai.berkeley.edu/multiagent.html
+
+python autograder.py -q q1
+python autograder.py -q q2
+python autograder.py -q q3
+python autograder.py -q q4
+ - python pacman.py -p ExpectimaxAgent -l minimaxClassic -a depth=3
+
+
 python pacman.py -p ReflexAgent -l testClassic
 
 Try out your reflex agent on the default mediumClassic layout with one ghost or two (and animation off to speed up the display):
@@ -6,3 +15,4 @@ Try out your reflex agent on the default mediumClassic layout with one ghost or 
 python pacman.py --frameTime 0 -p ReflexAgent -k 1
 
 python pacman.py --frameTime 0 -p ReflexAgent -k 2
+
