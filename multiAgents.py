@@ -106,7 +106,7 @@ class ReflexAgent(Agent):
 
 
         return successorGameState.getScore() + (1 / float(min_food_distance2)) - (
-                    1 / float(distances_to_ghosts)) - proximity_to_ghosts #- nearest_ghost
+                    1 / float(distances_to_ghosts)) - proximity_to_ghosts + nearest_ghost
         # return successorGameState.getScore() + (1 / float(min_food_distance)) - proximity_to_ghosts
 
 def scoreEvaluationFunction(currentGameState):
@@ -210,8 +210,10 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 return self.evaluationFunction(gameState)
             elif (agentcounter == 0):
                 return maxValue(gameState, depth, agentcounter)
+            # elif (agentcounter == 1):
+            #     return maxValue(gameState, depth, agentcounter)
             else:
-                return minValue(gameState, depth, agentcounter)
+                return maxValue(gameState, depth, agentcounter)
 
         actionsList = minOrMax(gameState, 0, 0)
         return actionsList[0]
@@ -246,6 +248,24 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         depth = self.depth
         agentcounter = self.evaluationFunction
 
+        def minValue(gameState, depth, agentcounter):
+            minimum = ["", float("inf")]
+            ghostActions = gameState.getLegalActions(agentcounter)
+
+            if not ghostActions:
+                return self.evaluationFunction(gameState)
+
+            for action in ghostActions:
+                currState = gameState.generateSuccessor(agentcounter, action)
+                current = minOrMax(currState, depth, agentcounter + 1)
+                if type(current) is not list:
+                    newVal = current
+                else:
+                    newVal = current[1]
+                if newVal < minimum[1]:
+                    minimum = [action, newVal]
+            return minimum
+
         def maxValue(gameState, depth, agentcounter):
 
             maximum = ["", -float("inf")]
@@ -273,11 +293,13 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
 
             if (depth == self.depth or gameState.isWin() or gameState.isLose()):
                 return self.evaluationFunction(gameState)
-            else: #(agentcounter == 0):
+            elif (not agentcounter == 0):
+                return minValue(gameState, depth, agentcounter)
+            else:
                 return maxValue(gameState, depth, agentcounter)
 
 
-        return maxValue(gameState, 0, 0)[0]
+        return maxValue(gameState, 0, 0)[1]
 
 def betterEvaluationFunction(currentGameState):
     """

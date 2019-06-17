@@ -117,3 +117,5 @@ Tools/ssl/win32
 gmon.out
 .mypy_cache/
 
+/*.pyc
+/*.pyc
