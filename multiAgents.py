@@ -271,7 +271,6 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             maximum = ["", -float("inf")]
             actions = gameState.getLegalActions(agentcounter)
 
-
             if not actions:
                 return self.evaluationFunction(gameState)
 
