@@ -82,15 +82,15 @@ class ReflexAgent(Agent):
         "calculating distance to the farthest food pallet"
         pacman = successorGameState.getPacmanPosition()
 
-        min_food_distance2 = 99999999
+        min_food_distance = 99999999
         for x in range(newFood.width):
             for y in range(newFood.height):
                 if newFood[x][y]:
                 # print str(newFood[x][y]) + " comida" + str(x) + " " + str(y)
                 # print "distancia de Manhattan " + str(util.manhattanDistance(pacman, (x, y)))
                     manhattanDistance = util.manhattanDistance(pacman, (x, y))
-                    if (min_food_distance2 >= manhattanDistance):
-                        min_food_distance2 = manhattanDistance
+                    if (min_food_distance >= manhattanDistance):
+                        min_food_distance = manhattanDistance
 
         "Calculating distance from PacMan to the ghost. Also, checking proximity of the ghost"
         distances_to_ghosts = 1.5
@@ -105,7 +105,7 @@ class ReflexAgent(Agent):
                 proximity_to_ghosts += 1
 
 
-        return successorGameState.getScore() + (1 / float(min_food_distance2)) - (
+        return successorGameState.getScore() + (1 / float(min_food_distance)) - (
                     1 / float(distances_to_ghosts)) - proximity_to_ghosts + nearest_ghost
         # return successorGameState.getScore() + (1 / float(min_food_distance)) - proximity_to_ghosts
 
@@ -213,7 +213,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
             # elif (agentcounter == 1):
             #     return maxValue(gameState, depth, agentcounter)
             else:
-                return maxValue(gameState, depth, agentcounter)
+                return minValue(gameState, depth, agentcounter)
 
         actionsList = minOrMax(gameState, 0, 0)
         return actionsList[0]
@@ -263,7 +263,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             return expectimax
 
         def maxValue(gameState, depth, agentcounter):
-            maximum = ["", -float("inf")]
+            maximum = -float("inf")
             actions = gameState.getLegalActions(agentcounter)
 
             if not actions:
@@ -276,7 +276,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
                     newVal = current
                 else:
                     newVal = current[1]
-                if newVal > maximum[1]:
+                if newVal > maximum:
                     maximum = [action, newVal]
             return maximum
 

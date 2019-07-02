@@ -24,4 +24,10 @@ python pacman.py --frameTime 0 -p MinimaxAgent -k 2 -g DirectionalGhost
 
 python pacman.py --frameTime 0 -p MinimaxAgent -k 4 -g DirectionalGhost -l originalClassic
 
+python pacman.py --frameTime 0 -p MinimaxAgent -k 2 -g CommunicationGhost -l originalClassic
+
+python pacman.py --frameTime 0 -p ReflexAgent -k 2 -g CommunicationGhost
+
 python pacman.py --frameTime 0 -p MinimaxAgent -k 2 -g CommunicationGhost
+
+python pacman.py --frameTime 0 -p ExpectimaxAgent -k 2 -g CommunicationGhost
