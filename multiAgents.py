@@ -238,36 +238,31 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
     def getAction(self, gameState):
         """
           Returns the expectimax action using self.depth and self.evaluationFunction
-
           All ghosts should be modeled as choosing uniformly at random from their
           legal moves.
         """
         "*** YOUR CODE HERE ***"
-        #util.raiseNotDefined()
 
-        depth = self.depth
-        agentcounter = self.evaluationFunction
-
-        def minValue(gameState, depth, agentcounter):
-            minimum = ["", float("inf")]
+        def expectFinder(gameState, depth, agentcounter):
+            expectimax = ["", 0]
             ghostActions = gameState.getLegalActions(agentcounter)
+            probability = 1.0 / len(ghostActions)
 
             if not ghostActions:
                 return self.evaluationFunction(gameState)
 
             for action in ghostActions:
                 currState = gameState.generateSuccessor(agentcounter, action)
-                current = minOrMax(currState, depth, agentcounter + 1)
-                if type(current) is not list:
-                    newVal = current
-                else:
+                current = expectimant(currState, depth, agentcounter + 1)
+                if type(current) is list:
                     newVal = current[1]
-                if newVal < minimum[1]:
-                    minimum = [action, newVal]
-            return minimum
+                else:
+                    newVal = current
+                expectimax[0] = action
+                expectimax[1] += newVal * probability
+            return expectimax
 
         def maxValue(gameState, depth, agentcounter):
-
             maximum = ["", -float("inf")]
             actions = gameState.getLegalActions(agentcounter)
 
@@ -276,7 +271,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
 
             for action in actions:
                 currState = gameState.generateSuccessor(agentcounter, action)
-                current = minOrMax(currState, depth, agentcounter + 1)
+                current = expectimant(currState, depth, agentcounter + 1)
                 if type(current) is not list:
                     newVal = current
                 else:
@@ -285,20 +280,20 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
                     maximum = [action, newVal]
             return maximum
 
-        def minOrMax(gameState, depth, agentcounter):
+        def expectimant(gameState, depth, agentcounter):
             if agentcounter >= gameState.getNumAgents():
                 depth += 1
                 agentcounter = 0
 
             if (depth == self.depth or gameState.isWin() or gameState.isLose()):
                 return self.evaluationFunction(gameState)
-            elif (not agentcounter == 0):
-                return minValue(gameState, depth, agentcounter)
-            else:
+            elif (agentcounter == 0):
                 return maxValue(gameState, depth, agentcounter)
+            else:
+                return expectFinder(gameState, depth, agentcounter)
 
-
-        return maxValue(gameState, 0, 0)[1]
+        actionsList = expectimant(gameState, 0, 0)
+        return actionsList[0]
 
 def betterEvaluationFunction(currentGameState):
     """
